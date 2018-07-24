@@ -136,22 +136,39 @@ message.channel.send({embed});
 }
 
 });
+const db = require('quick.db');
 client.on('message' , async (message) => {
-       if(message.content.startsWith(prefix + "give-rk")) {
-  const emoji = "1⃣"
-message.channel.send('**اضغط على1⃣ للحصول على رتبه **')
-.then( msg => {
-msg.react(emoji).then( r => {
-  const mis = (reaction, user) => reaction.emoji.name === emoji && user.id === message.author.id;
-  const swe = msg.createReactionCollector(mis, { time: 10000 });
-  swe.on('collect', r => {
+       if(message.content.startsWith(prefix + "pre")) {
+       let args = message.content.split(" ").slice(1);
+let fetched = await db.fetch(`prefix_${message.guild.id}`);
+if (fetched === null) prefix = '-';
+else prefix = fetched;
+ 
 
-let role = message.guild.roles.find("name", "noob level 1");
-message.guild.member(message.author).addRole(role);
-});
-});
-});
-}
-});
+
+if (!message.member.hasPermission('ADMINISTRATOR') && message.author.id !== '404610434063269908') return message.channel.send('Sorry, you don\'t have permission to change server prefix')
+    .then(msg => msg.delete({
+        timeout: 10000
+    }));
+
+if (!args.join(' ')) return message.channel.send('Please provide a prefix to change server prefix')
+    .then(msg => msg.delete({
+        timeout: 10000
+    }));
+    
+
+db.set(`prefix_${message.guild.id}`, args.join(' '))
+    .then(i => {
+    
+    message.channel.sendMessage("", {embed: {
+      title: "Prefix Set!",
+      color: 0x06DF00,
+      description: `Set to ${i}`,
+     
+    }})
+    })
+       }
+    
+       });
 
 client.login(process.env.BOT_TOKEN);
