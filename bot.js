@@ -136,7 +136,7 @@ client.on('message', message => {
       
                                     //red                    
                                active.on("collect", r => {
-                                   message.member.addRole(message.guild.roles.find("name", "red"))
+                                   message.member.addRole(message.guild.roles.find("1", "red"))
                                    
                                    
                             
